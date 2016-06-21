@@ -168,7 +168,7 @@
         lookup.push(latLng);
 
         if (colorFn) {
-          color = colorFn();
+          color = colorFn(data[i]);
         }
 
         //-- 2 coord, 3 rgb colors interleaved buffer

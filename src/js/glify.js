@@ -73,6 +73,8 @@
         pixelY = (0.5 - Math.log((1 + sinLatitude) / (1 - sinLatitude)) / (pi4)) * 256,
         pixelX = ((longitude + 180) / 360) * 256;
 
+      if (pixelY < 0) pixelY = 0; // for points above 85 degrees N which web mercator can't show
+
       return {x: pixelX, y: pixelY};
     },
     Points: null,

@@ -59,7 +59,7 @@
       color: {
         type: 'FLOAT',
         start: 2,
-        size: 3
+        size: 4
       }
     }
   };
@@ -100,7 +100,6 @@
         program = this.program,
         glLayer = this.glLayer,
         matrix = this.matrix = gl.getUniformLocation(program, 'matrix'),
-        opacity = gl.getUniformLocation(program, 'opacity'),
         vertex = gl.getAttribLocation(program, 'vertex'),
         vertexBuffer = gl.createBuffer(),
         vertexArray = new Float32Array(this.verts),
@@ -113,10 +112,9 @@
 
       gl.viewport(0, 0, canvas.width, canvas.height);
       gl.uniformMatrix4fv(matrix, false, this.pixelsToWebGLMatrix);
-      gl.uniform1f(opacity, this.settings.opacity);
       gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STATIC_DRAW);
-      gl.vertexAttribPointer(vertex, 2, gl.FLOAT, false, size * 5, 0);
+      gl.vertexAttribPointer(vertex, 2, gl.FLOAT, false, size * 6, 0);
       gl.enableVertexAttribArray(vertex);
 
       if (settings.shaderVars !== null) {
@@ -171,8 +169,10 @@
           color = colorFn(data[i]);
         }
 
-        //-- 2 coord, 3 rgb colors interleaved buffer
-        verts.push(pixel.x, pixel.y, color.r, color.g, color.b);
+        var opacity = color.a ? color.a : this.settings.opacity;
+
+        //-- 2 coord, 4 rgba colors interleaved buffer
+        verts.push(pixel.x, pixel.y, color.r, color.g, color.b, opacity);
         if (settings.eachVertex !== null) {
           settings.eachVertex.call(this, latLng, pixel, color);
         }

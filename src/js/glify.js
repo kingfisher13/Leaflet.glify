@@ -103,7 +103,7 @@
       var name,
           loc,
           attribute,
-          bytes = 5;
+          bytes = 6;
 
       for (name in attributes) if (attributes.hasOwnProperty(name)) {
         attribute = attributes[name];

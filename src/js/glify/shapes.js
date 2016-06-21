@@ -52,7 +52,7 @@
       color: {
         type: 'FLOAT',
         start: 2,
-        size: 3
+        size: 4
       }
     }
   };
@@ -92,7 +92,7 @@
         glLayer = this.glLayer,
         start = new Date(),
         verts = this.verts,
-        numPoints = verts.length / 5,
+        numPoints = verts.length / 6,
         vertexBuffer = gl.createBuffer(),
         vertArray = new Float32Array(verts),
         size = vertArray.BYTES_PER_ELEMENT,
@@ -105,7 +105,7 @@
       gl.uniform1f(opacity, this.settings.opacity);
       gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, vertArray, gl.STATIC_DRAW);
-      gl.vertexAttribPointer(vertex, 2, gl.FLOAT, false, size * 5, 0);
+      gl.vertexAttribPointer(vertex, 2, gl.FLOAT, false, size * 6, 0);
       gl.enableVertexAttribArray(vertex);
 
       //  gl.disable(gl.DEPTH_TEST);
@@ -176,6 +176,8 @@
           color = colorFn();
         }
 
+        var opacity = color.a ? color.a : this.settings.opacity;
+
         flat = L.glify.flattenData(feature.geometry.coordinates);
 
         indices = earcut(flat.vertices, flat.holes, flat.dimensions);
@@ -188,11 +190,11 @@
 
         for (i = 0, iMax = triangles.length; i < iMax; i) {
           pixel = L.glify.latLonToPixel(triangles[i++],triangles[i++]);
-          verts.push(pixel.x, pixel.y, color.r, color.g, color.b);
+          verts.push(pixel.x, pixel.y, color.r, color.g, color.b, opacity);
         }
       }
 
-      console.log("num points:   " + (verts.length / 5));
+      console.log("num points:   " + (verts.length / 6));
 
       return this;
     },
@@ -287,7 +289,7 @@
       gl.vertexAttrib1f(gl.aPointSize, pointSize);
       // -- attach matrix value to 'mapMatrix' uniform in shader
       gl.uniformMatrix4fv(this.matrix, false, mapMatrix);
-      gl.drawArrays(gl.TRIANGLES, 0, this.verts.length / 5);
+      gl.drawArrays(gl.TRIANGLES, 0, this.verts.length / 6);
 
       return this;
     },

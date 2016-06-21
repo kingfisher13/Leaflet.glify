@@ -144,6 +144,7 @@
       var self = this;
       if (points.length < 1) return null;
       return points.reduce(function (prev, curr) {
+        if (isNaN(curr[0]) || isNaN(curr[1])) return prev;
         var prevDistance = self.locationDistance(targetLocation, prev, map),
             currDistance = self.locationDistance(targetLocation, curr, map);
         return (prevDistance < currDistance) ? prev : curr;
